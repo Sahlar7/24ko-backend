@@ -1,0 +1,11 @@
+{
+  "name": "24ko-backend",
+  "version": "1.0.0",
+  "description": "A multiplayer spin on the classic math game, 24! Play with your friends and try to survive as you combine numbers to make 24.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
