@@ -7,15 +7,7 @@ class Player {
         this.isAlive = true;
         this.lobbyId = lobbyId; 
         this.ready = false;
-    }
-    setHealth(health) {
-        this.health = health;
-    }
-    setSolvedCount(solvedCount) {
-        this.solvedCount = solvedCount;
-    }
-    setIsAlive(isAlive) {
-        this.isAlive = isAlive;
+        this.rank = 0;
     }
 }
 

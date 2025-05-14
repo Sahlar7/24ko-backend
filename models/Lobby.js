@@ -24,5 +24,10 @@ class Lobby{
             player.isAlive = true;
         });
     }
+    endGame() {
+        this.status = 'results';
+        const winner = this.players.filter(player => player.isAlive);
+        winner.rank = 1;
+    }
 }
 module.exports = Lobby;

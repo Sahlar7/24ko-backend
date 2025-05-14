@@ -70,13 +70,18 @@ const handleSocketConnection=(io, lobbies, socketLobbies)=>{
         socket.on('playerSolved', (lobbyId, damage) => {
             const player = lobbies[lobbyId].getPlayerById(socket.id);
             player.solvedCount++;
-            otherPlayers = lobbies[lobbyId].players.filter(p => p.socketId !== player.socketId);
+            otherPlayers = lobbies[lobbyId].players.filter(p => p.socketId !== player.socketId)
+            .filter(p => p.isAlive);
             target = otherPlayers[Math.floor(Math.random() * otherPlayers.length)];
             target.health -= damage;
+            target.health = Math.max(target.health, 0);
             if (target.health <= 0) {
                 target.isAlive = false;
+                target.rank = otherPlayers.length + 1;
             }
-
+            if(lobbies[lobbyId].players.filter(p => p.isAlive).length === 1){
+                lobbies[lobbyId].endGame();
+            }
             io.to(lobbyId).emit('updateLobby', lobbies[lobbyId]);
             io.to(socket.id).emit('updatePlayer', player);
         });
