@@ -6,6 +6,7 @@ class Player {
         this.solvedCount = 0;
         this.isAlive = true;
         this.lobbyId = lobbyId; 
+        this.ready = false;
     }
     setHealth(health) {
         this.health = health;
@@ -18,4 +19,4 @@ class Player {
     }
 }
 
-export default Player;
+module.exports = Player;

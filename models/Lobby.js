@@ -3,12 +3,13 @@ class Lobby{
         this.id =id;
         this.players = [];
         this.status = 'waiting'
+        this.readyCount = 0;
     }
     addPlayer(player){
         this.players.push(player);
     }
-    removePlayer(playerId){
-        this.players = this.players.filter(player => player.id !== playerId);
+    removePlayer(socketId){
+        this.players = this.players.filter(player => player.socketId !== socketId);
     }
     getPlayerById(socketId){
         return this.players.find(player => player.socketId === socketId);
@@ -17,10 +18,11 @@ class Lobby{
     startGame(){
         this.status = 'playing';
         this.players.forEach(player => {
+            player.ready = false;
             player.health = 100;
             player.solvedCount = 0;
             player.isAlive = true;
         });
     }
 }
-export default Lobby;
+module.exports = Lobby;
