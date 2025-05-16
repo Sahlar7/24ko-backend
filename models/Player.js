@@ -9,6 +9,14 @@ class Player {
         this.ready = false;
         this.rank = 0;
     }
+
+    reset() {
+        this.health = 100;
+        this.solvedCount = 0;
+        this.isAlive = true;
+        this.ready = false;
+        this.rank = 0;
+    }
 }
 
 module.exports = Player;

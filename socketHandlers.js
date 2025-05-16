@@ -59,14 +59,20 @@ const handleSocketConnection=(io, lobbies, socketLobbies)=>{
                 const player = lobbies[lobbyId].getPlayerById(socket.id);
                 player.ready = true;
                 readyCount = lobbies[lobbyId].players.filter(player => player.ready).length;
+                if(readyCount === lobbies[lobbyId].players.length){
+                    io.to(lobbyId).emit('startGame', lobbies[lobbyId]);
+                }
                 io.to(lobbyId).emit('updateLobby', lobbies[lobbyId]);
                 io.to(socket.id).emit('updatePlayer', player);
-                if(readyCount === lobbies[lobbyId].players.length){
-                    lobbies[lobbyId].startGame();
-                    io.to(lobbyId).emit('updateLobby', lobbies[lobbyId]);
-                }
             }
         });
+        socket.on('countdownFinished', (lobbyId) => {
+            lobbies[lobbyId].startGame();
+            const player = lobbies[lobbyId].getPlayerById(socket.id);
+            io.to(socket.id).emit('updatePlayer', player);
+            io.to(socket.id).emit('updateLobby', lobbies[lobbyId]);
+        });
+
         socket.on('playerSolved', (lobbyId, damage) => {
             const player = lobbies[lobbyId].getPlayerById(socket.id);
             player.solvedCount++;
@@ -86,6 +92,19 @@ const handleSocketConnection=(io, lobbies, socketLobbies)=>{
             io.to(socket.id).emit('updatePlayer', player);
         });
 
+        socket.on('backToLobby', () => {
+            const lobby = lobbies[socketLobbies[socket.id]];
+            const player = lobby.getPlayerById(socket.id);
+            if(lobby.status !== 'waiting'){
+                lobby.status = 'waiting';
+                console.log('updated lobby status to waiting');
+            }
+            lobby.players.forEach(player => {
+                player.reset();
+                io.to(player.socketId).emit('updatePlayer', player);
+            });
+            io.to(lobby.id).emit('updateLobby', lobby);
+        });
 
         socket.on('disconnect', () => {
             if (socketLobbies[socket.id]) {

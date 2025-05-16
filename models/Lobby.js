@@ -3,7 +3,6 @@ class Lobby{
         this.id =id;
         this.players = [];
         this.status = 'waiting'
-        this.readyCount = 0;
     }
     addPlayer(player){
         this.players.push(player);
@@ -18,10 +17,7 @@ class Lobby{
     startGame(){
         this.status = 'playing';
         this.players.forEach(player => {
-            player.ready = false;
-            player.health = 100;
-            player.solvedCount = 0;
-            player.isAlive = true;
+            player.reset();
         });
     }
     endGame() {
