@@ -23,7 +23,8 @@ class Lobby{
     endGame() {
         this.status = 'results';
         const winner = this.players.filter(player => player.isAlive);
-        winner.rank = 1;
+        if (winner.length > 0)
+            winner.rank = 1;
     }
 }
 module.exports = Lobby;

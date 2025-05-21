@@ -84,6 +84,7 @@ const handleSocketConnection=(io, lobbies, socketLobbies)=>{
             if (target.health <= 0) {
                 target.isAlive = false;
                 target.rank = otherPlayers.length + 1;
+                socket.to(target.socketId).emit('playerDied');
             }
             if(lobbies[lobbyId].players.filter(p => p.isAlive).length === 1){
                 lobbies[lobbyId].endGame();
@@ -114,6 +115,11 @@ const handleSocketConnection=(io, lobbies, socketLobbies)=>{
                     console.log(`Lobby ${socketLobbies[socket.id]} deleted`);
                 }
                 else {
+                    if(lobbies[socketLobbies[socket.id]].status === 'playing') {
+                        if(lobbies[socketLobbies[socket.id]].players.filter(p => p.isAlive).length === 1 || lobbies[socketLobbies[socket.id]].players.length === 1){
+                            lobbies[socketLobbies[socket.id]].endGame();
+                        }
+                    }
                     io.to(socketLobbies[socket.id]).emit('updateLobby', lobbies[socketLobbies[socket.id]]);
                     io.to(socketLobbies[socket.id]).emit('playerExited', `User ${socket.id} exited lobby ${socketLobbies[socket.id]}`);
                 }
