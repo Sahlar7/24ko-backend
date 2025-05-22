@@ -95,7 +95,6 @@ const handleSocketConnection=(io, lobbies, socketLobbies)=>{
 
         socket.on('backToLobby', () => {
             const lobby = lobbies[socketLobbies[socket.id]];
-            const player = lobby.getPlayerById(socket.id);
             if(lobby.status !== 'waiting'){
                 lobby.status = 'waiting';
                 console.log('updated lobby status to waiting');
