@@ -84,13 +84,18 @@ const handleSocketConnection=(io, lobbies, socketLobbies)=>{
             if (target.health <= 0) {
                 target.isAlive = false;
                 target.rank = otherPlayers.length + 1;
-                socket.to(target.socketId).emit('playerDied');
+                io.to(lobbyId).emit('playerDied', target.socketId);
             }
             if(lobbies[lobbyId].players.filter(p => p.isAlive).length === 1){
-                lobbies[lobbyId].endGame();
+                io.to(lobbyId).emit('gameFinished');
             }
             io.to(lobbyId).emit('updateLobby', lobbies[lobbyId]);
             io.to(socket.id).emit('updatePlayer', player);
+        });
+
+        socket.on('endGame', (lobbyId)=>{
+            lobbies[lobbyId].endGame();
+            io.to(socket.id).emit('updateLobby', lobbies[lobbyId]);
         });
 
         socket.on('backToLobby', () => {
